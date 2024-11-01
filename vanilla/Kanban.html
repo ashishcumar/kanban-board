@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kanban-Vanilla</title>
+    <script src="kanban.js" type="module"></script>
+    <link rel="stylesheet" href="kanban.css" />
+  </head>
+  <body>
+    <div id="app" class="container">
+      <h1 class="title">Welcome back, Ashish 👋</h1>
+      <div class="filters-row">
+        <div class="search-input-container">
+          <div class="search-icon-container">
+            <img src="./assets/searchIcon.svg" alt="search-icon" />
+          </div>
+          <input
+            type="text"
+            class="search-input"
+            id="search-input"
+            placeholder="Search"
+          />
+        </div>
+        <button class="add-task-btn" id="add-task">Add Task</button>
+      </div>
+      <div class="board-container" id="board-container"></div>
+      <div class="add-task-modal-container" id="add-task-modal-container">
+        <!-- Add Task Form -->
+        <div class="add-task-form">
+          <h2>Add Task</h2>
+          <form id="kanbanAddTaskForm">
+            <!-- Task Name/Detail -->
+            <label for="taskName">Task Name/Detail:</label>
+            <input
+              type="text"
+              id="taskName"
+              name="taskName"
+              placeholder="Enter task details"
+              required
+            />
+
+            <!-- Status -->
+            <label for="status">Status:</label>
+            <div class="status-options" id="status-options">
+              <div>
+                <input type="radio" name="status" value="ideas" />
+                Ideas
+              </div>
+              <div>
+                <input type="radio" name="status" value="in-progress" />
+                In Progress
+              </div>
+              <div>
+                <input type="radio" name="status" value="in-review" />
+                In Review
+              </div>
+              <div>
+                <input type="radio" name="status" value="completed" />
+                Completed
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="add-task-form-btn">Add Task</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
