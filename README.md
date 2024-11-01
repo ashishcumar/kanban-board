@@ -3,6 +3,8 @@
 This is a simple and interactive Kanban board built with HTML, CSS, and vanilla JavaScript. It allows users to create, manage, and organize tasks through a user-friendly interface. I'm revisiting and practicing raw HTML, CSS, and JavaScript through this project, as it's been a while since I last worked with these technologies directly.
 
 Project Video :- [Youtube](https://youtu.be/CpUk-8dgjhY)
+![Readme Image1](assets/readmeImg1.png)
+![Readme Image2](assets/readmeImg2.png)
 
 ## Features
 
