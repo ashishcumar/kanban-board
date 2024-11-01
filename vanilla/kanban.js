@@ -13,13 +13,33 @@ const searchInputRef = document.getElementById("search-input");
 const appRef = document.getElementById("app");
 const addTaskRef = document.getElementById("add-task");
 const modalContainerRef = document.getElementById("add-task-modal-container");
-const addTaskFormRef = document.getElementById('kanbanAddTaskForm')
-const taskNameInputRef = document.getElementById('taskName')
-const statusOptionContainerRef = document.getElementById('status-options')
+const addTaskFormRef = document.getElementById("add-task-form-btn");
+const taskNameInputRef = document.getElementById("taskName");
+const statusOptionContainerRef = document.getElementById("status-options");
 
 // Onload Functions
+const clearBoard = () => {
+  defaultData.forEach((data) => {
+    const container = document.getElementById(data.status);
+    if (container) {
+      container.innerHTML = ""; // Clear all children
+    }
+  });
+};
+
+const attachDragEvents = () => {
+  defaultData.forEach((data) => {
+    const card = document.getElementById(`card-${data.id}`);
+    if (card) {
+      card.addEventListener("dragstart", (event) => {
+        onDragStart(event);
+      });
+    }
+  });
+};
+
 const kanbanCards = (defaultData) => {
-  if(!defaultData.length) return
+  if (!defaultData.length) return;
   defaultData.forEach((data) => {
     document.getElementById(data.status).innerHTML += `
     <div class="card" id="card-${data.id}"  draggable="true" >
@@ -92,18 +112,52 @@ const addTabsAndData = async () => {
     tabCount.innerText = tab.children.length - 1;
   });
 
-  defaultData.forEach((data) => {
-    const card = document.getElementById(`card-${data.id}`);
-    card?.addEventListener("dragstart", (event) => {
-      onDragStart(event);
-    });
-  });
+  attachDragEvents();
 };
 
 document.addEventListener("DOMContentLoaded", addTabsAndData);
 
+// Add Card Functions
+
+const openAddTaskModal = () => {
+  modalContainerRef.style.display = "grid";
+  document.body.style.overflow = "hidden";
+  taskNameInputRef.focus()
+};
+
+const verifyAndAddCard = (event) => {
+  event.preventDefault();
+  const taskName = taskNameInputRef.value;
+  const selectedStatus = document.querySelector(
+    'input[name="status"]:checked'
+  ).value;
+  const newCard = {
+    id: defaultData.length + 1,
+    todo: taskName,
+    status: selectedStatus,
+    profilePic: profilePicApi[Math.floor(Math.random() * profilePicApi.length)],
+    tags: taskName
+      .split(" ")
+      .filter((word) => word.length > 3 && word.toLowerCase()),
+  };
+  const temp = [...defaultData, newCard];
+  clearBoard();
+  localStorage.setItem("vanilla-boardData", JSON.stringify(temp));
+  kanbanCards(temp);
+
+  modalContainerRef.style.display = "none";
+  document.body.style.overflow = "auto";
+  taskNameInputRef.value = "";
+  attachDragEvents();
+  window.location.reload();
+};
+
+addTaskRef.addEventListener("click", openAddTaskModal);
+addTaskFormRef.addEventListener("click", verifyAndAddCard);
+
 // Drag Functions
 const onDragStart = (event) => {
+  console.log("drag strt", event.target);
   event.dataTransfer.setData("text/plain", event.target.id);
 };
 
@@ -112,33 +166,28 @@ const onDrop = (event) => {
   const cardId = event.dataTransfer.getData("text/plain");
   const card = document.getElementById(cardId);
 
-  // current board changes
-  const closestBoard = event.target.closest(".board");
-  closestBoard.appendChild(card);
-  const newChildCount = closestBoard.children.length - 1;
-  const newCount = document.getElementById(closestBoard.id + "-board-count");
-  newCount.innerText = newChildCount;
+  if (card) {
+    // Only proceed if card exists
+    const closestBoard = event.target.closest(".board");
+    closestBoard.appendChild(card);
 
-  const selectedCardObject = defaultData.find(
-    (data) => data.todo === card.firstChild.nextSibling.innerText
-  );
+    const newCount = document.getElementById(closestBoard.id + "-board-count");
+    newCount.innerText = closestBoard.children.length - 1;
 
-  // prev board changes
-  const prevBoardId = selectedCardObject.status;
-  const updateCountRef = document.getElementById(prevBoardId + "-board-count");
-  updateCountRef.innerHTML = Number(updateCountRef.innerHTML) - 1;
+    const selectedCardObject = defaultData.find(
+      (data) => `card-${data.id}` === cardId
+    );
+    const prevBoardId = selectedCardObject.status;
+    const updateCountRef = document.getElementById(
+      prevBoardId + "-board-count"
+    );
+    updateCountRef.innerText = Number(updateCountRef.innerText) - 1;
 
-  // new status changes
-  const newDataInLocalStore = defaultData.map((data) => {
-    if (data.todo === selectedCardObject.todo) {
-      data.status = closestBoard.id;
-    }
-    return data;
-  });
-  localStorage.setItem(
-    "vanilla-boardData",
-    JSON.stringify(newDataInLocalStore)
-  );
+    selectedCardObject.status = closestBoard.id;
+    localStorage.setItem("vanilla-boardData", JSON.stringify(defaultData));
+  } else {
+    console.error("Card not found for ID:", cardId);
+  }
 };
 
 const onDropOver = (event) => {
@@ -146,42 +195,29 @@ const onDropOver = (event) => {
 };
 
 // Search Functions
+const removeExtraChildren = () => {
+  tabsId.forEach((tabId) => {
+    const tabElement = document.getElementById(tabId);
+    // Check if the tab element exists and has more than one child
+    if (tabElement && tabElement.children.length > 1) {
+      while (tabElement.children.length > 1) {
+        tabElement.removeChild(tabElement.lastChild);
+      }
+    }
+  });
+};
 const searchCards = () => {
   const searchInput = searchInputRef.value;
   const searchResults = defaultData.filter((data) => {
     return data.todo.toLowerCase().includes(searchInput.toLowerCase());
   });
+  console.log({ searchInputRef: searchResults.length, searchInput });
   if (searchResults.length) {
-    defaultData.forEach((data) => {
-      const container = document.getElementById(data.status);
-      if (container && container.children.length > 1) {
-        while (container.children.length > 1) {
-          container.removeChild(container.lastChild);
-        }
-      }
-    });
+    removeExtraChildren();
     kanbanCards(searchResults);
   } else {
-    console.log("else case calling", searchResults);
-    kanbanCards(defaultData);
+    removeExtraChildren();
   }
 };
 
 searchInputRef.addEventListener("input", searchCards);
-
-// Add Card Functions
-
-const openAddTaskModal = () => {
-  modalContainerRef.style.display = "grid";
-  document.body.style.overflow = "hidden";
-};
-
-const verifyAndAddCard = (event) => {
-  event.preventDefault();
-  const taskName = taskNameInputRef.value;
-  // const status = statusOptionContainerRef.children;
-  console.log(taskName,);
-}
-
-addTaskRef.addEventListener("click", openAddTaskModal);
-addTaskFormRef.addEventListener("click",verifyAndAddCard)

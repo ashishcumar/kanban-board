@@ -141,6 +141,7 @@ body {
   border-radius: 8px;
   border: 1px solid var(--border-shade1);
   min-height: 500px;
+  max-width: 400px;
 }
 
 .board-title-container {
@@ -192,6 +193,7 @@ body {
   display: flex;
   gap: 8px;
   margin: 8px 0;
+  flex-wrap: wrap;
 }
 
 .tag {
@@ -231,17 +233,17 @@ body {
 .add-task-modal-container {
   position: absolute;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  /* background-color: rgba(0, 0, 0, 0.5); */
   display: none;
   place-content: center;
   transition: all 0.3s ease;
+  background: rgba(100, 100, 100, 0.1);
+  backdrop-filter: blur(8px);
 }
 
-
-
 .add-task-form {
-  width: 300px;
-  padding: 20px;
+  width: 500px;
+  padding: 36px;
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #f9f9f9;
@@ -250,6 +252,7 @@ body {
 .add-task-form h2 {
   text-align: center;
   color: #333;
+  margin-bottom: 24px;
 }
 
 .add-task-form label {
@@ -265,6 +268,7 @@ body {
   margin-top: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  margin-bottom: 12px;
 }
 
 .add-task-form button {
@@ -285,14 +289,13 @@ body {
 
 .status-options {
   margin-top: 5px;
-
 }
 
 .status-options div {
   display: flex;
   font-weight: normal;
   align-items: center;
-  gap:12px;
+  gap: 12px;
   margin: 8px 0;
 }
 
