@@ -3,11 +3,13 @@ const profilePicApi = [
   "https://xsgames.co/randomusers/avatar.php?g=female",
   "https://xsgames.co/randomusers/avatar.php?g=pixel",
   "https://xsgames.co/randomusers/avatar.php?g=male",
+  "https://100k-faces.glitch.me/random-image",
   "https://xsgames.co/randomusers/avatar.php?g=female",
   "https://xsgames.co/randomusers/avatar.php?g=pixel",
   "https://xsgames.co/randomusers/avatar.php?g=male",
   "https://xsgames.co/randomusers/avatar.php?g=female",
   "https://xsgames.co/randomusers/avatar.php?g=pixel",
+  "https://100k-faces.glitch.me/random-image",
 ];
 const tabsId = ["ideas-tab", "inprogress-tab", "inreview-tab", "completed-tab"];
 const boardSectionsAndDetails = [

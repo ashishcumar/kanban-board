@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", addTabsAndData);
 const openAddTaskModal = () => {
   modalContainerRef.style.display = "grid";
   document.body.style.overflow = "hidden";
-  taskNameInputRef.focus()
+  taskNameInputRef.focus();
 };
 
 const verifyAndAddCard = (event) => {
@@ -215,6 +215,11 @@ const searchCards = () => {
   if (searchResults.length) {
     removeExtraChildren();
     kanbanCards(searchResults);
+    tabsId.forEach((tabId) => {
+      const tabElement = document.getElementById(tabId + "-board-count");
+      tabElement.innerText =
+        searchResults.filter((item) => item.status === tabId).length ;
+    });
   } else {
     removeExtraChildren();
   }
